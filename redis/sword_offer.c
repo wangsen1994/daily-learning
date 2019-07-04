@@ -27,7 +27,6 @@ void replaceSpace(char *str,int length) {
 	if(newl > length) return;
 
 	while(oldl>=0&&newl>oldl){
-
 		if(str[oldl]==' '){
 			str[newl--] = '0'; 
 			str[newl--] = '2'; 
@@ -46,7 +45,6 @@ vector<int> printListFromTailToHead(ListNode* head) {
         stack<int> st;
 
         while(head){
-
         	st.push(head->val);
         	head = head->next;
         }
@@ -79,7 +77,6 @@ TreeNode* helper(vector<int> pre,vector<int> vin,int prel,int prer,int inl,int i
 TreeNode* reConstructBinaryTree(vector<int> pre,vector<int> vin) {
 
 	return helper(pre,vin,0,pre.size()-1,0,vin.size()-1);
-
     }
 
 # 5
@@ -115,9 +112,7 @@ int minNumberInRotateArray(vector<int> rotateArray) {
         
         int n = rotateArray.size();
         if(n==0)return 0;
-
         int l = 0, r = n-1;
-
         while(l<=r){ /* 必须加等号 */
 
         	int mid = l + (r-l)/2;
@@ -139,11 +134,8 @@ int Fibonacci(int n) {
 
 	vector<int> data = {0,1};
 	if(n<=1) return data[n];
-
 	else{
-
 		while(--n>0){
-
 			int tmp = data.back();
 			data[1] += data[0];
 			data[0] = tmp;
@@ -158,7 +150,6 @@ int Fibonacci(int n) {
 int jumpFloor(int number) {
        
     vector<int> data = {0,1,2};
-
 	if(number<=2) return data[number];
 
 	else{
@@ -171,7 +162,6 @@ int jumpFloor(int number) {
 			data[1] = tmp;
 		}
 	}
-
 	return data.back()；
 
     }
@@ -204,7 +194,6 @@ int rectCover(int number) {
         }
     }
     return data.back();
-
     }
 
 # 11
@@ -220,14 +209,65 @@ int  NumberOf1(int n) {
 
 # 12  
 double Power(double base, int exponent) {
-    long long res;
+    long long res = 1;
 
-    
+    if(base==0) return 0;
+    if(exponent==0) return 1;
+    if(exponent>0){
+        while(exponent--){
+            res *= base;
+        }
+        return res;
+    }
+    else {
+        while(exponent++){
+            res *= base;
+        }
+        return 1.0/res;
+    }
     }
 
+# 13
+void reOrderArray(vector<int> &array) {
+        
+        int n = array.size();
 
+        bool flag = true;
+        for(int i = 0;i<n-1&&flag;i++){
 
+            flag = false;
+            for(int j = n - 1;j>i;j--){
+                if(array[j]%2==1&&array[j-1]%2==0){
+                    swap(array[j],array[j-1]);
+                    flag = true;
+                }
+            }
+        }
+    }
 
+# 14
+ListNode* FindKthToTail(ListNode* pListHead, unsigned int k) {
+    
+    ListNode* node = pListHead;
+    while(--k&&node) node = node->next;
+    if(!node) return NULL;
+
+    while(node->next){
+        pListHead = pListHead->next;
+        node = node->next;
+    }
+    return pListHead;
+    }
+
+# 15
+ListNode* ReverseList(ListNode* pHead) {
+
+    if(!pHead||!pHead->next) return pHead;
+    ListNode* node = ReverseList(pHead->next);
+    pHead->next->next = pHead;
+    pHead->next = NULL;
+    return node;
+    }
 
 
 
