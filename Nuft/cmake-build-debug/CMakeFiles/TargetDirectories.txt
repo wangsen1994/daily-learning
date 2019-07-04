@@ -1,0 +1,3 @@
+/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/CMakeFiles/Nuft.dir
