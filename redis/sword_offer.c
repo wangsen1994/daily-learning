@@ -269,6 +269,56 @@ ListNode* ReverseList(ListNode* pHead) {
     return node;
     }
 
+# 16
+ListNode* Merge(ListNode* pHead1, ListNode* pHead2){
+        
+		ListNode* dummy = new ListNode(-1);
+		ListNode* cur = dummy;
 
+		while(pHead1||pHead2){
 
+			int tmp1 = pHead1?pHead1->val:INT_MAX;
+			int tmp2 = pHead2?pHead2->val:INT_MAX;
 
+			if(tmp1>tmp2){
+
+				cur->next = pHead2;
+				pHead2 = pHead2->next;
+				cur = cur->next;
+			}else {
+				cur->next = pHead1;
+				pHead1 = pHead1->next;
+				cur = cur->next;
+			}
+		}
+		return dummy->next;
+    }
+
+# 17
+bool helper(TreeNode* pRoot1, TreeNode* pRoot2){
+	if(!pRoot2) return true;
+	if(!pRoot1) return false;
+	if(pRoot1->val==pRoot2->val){
+		return helper(pRoot1->left,pRoot2->left)&&helper(pRoot1->right,pRoot2->right);
+	}else return false;
+}
+bool HasSubtree(TreeNode* pRoot1, TreeNode* pRoot2){
+
+	if(pRoot1==NULL||pRoot2==NULL) return false;
+
+	return helper(pRoot1,pRoot2)|| HasSubtree(pRoot1->left,pRoot2)||HasSubtree(pRoot1->right,pRoot2);
+}
+
+# 18
+void Mirror(TreeNode *pRoot) {
+	if(pRoot==NULL) return;
+	if(!pRoot->left&& !pRoot->right) return;
+	TreeNode* tmp = pRoot->left;
+    pRoot->left = pRoot->right;
+    pRoot->right = tmp;
+         
+    if(pRoot->left) Mirror(pRoot->left);
+    if(pRoot->right) Mirror(pRoot->right);
+    }
+
+# 19
