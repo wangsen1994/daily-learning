@@ -269,6 +269,114 @@ ListNode* ReverseList(ListNode* pHead) {
     return node;
     }
 
+# 29
+void helper(vector<int>& input,int l,int r,int k){
 
+    int pivot = input[r];
+    int i = l, j = r;
+    while(i<j){
 
+        while(i<j&&input[i]<=pivot)i++;
+        input[j] = input[i];
+        while(i<j&&input[j]>=pivot)j--;
+        input[i] = input[j];
+    }
+    input[i] = pivot;
+    if(i+1<k)
+        helper(input,i+1,r,k);
+    else if(i+1>k)
+        helper(input,l,r-1,k);
+
+}
+vector<int> GetLeastNumbers_Solution(vector<int> input, int k) {
+
+    if(input.size()<=k)
+        return input;
+    else
+        helper(input,0,input.size()-1,k);
+    return vector<int>(input.begin(),input.begin()+k);
+}
+// 方法二 上面方法超时未通过
+vector<int> GetLeastNumbers_Solution(vector<int> input, int k) {
+
+    if(input.size()<k)
+        return {};
+    else{
+        make_heap(input.begin(),input.end(),less<int>());
+        for(int i=0;i<input.size()-k;i++){
+            pop_heap(input.begin(),input.begin()+input.size()-i);
+        }
+    }
+    return vector<int>(input.begin(),input.begin()+k);
+}
+
+# 30
+int FindGreatestSumOfSubArray(vector<int> array) {
+    
+    int amount = 0;
+    int maxSum = INT_MIN;
+    for(int i = 0;i<array.size();i++){
+        amount = max(amount+array[i],array[i]);
+        maxSum = max(maxSum,amount);
+    }
+    return maxSum;
+}
+
+# 31
+int NumberOf1Between1AndN_Solution(int n){
+    
+    }
+
+# 32
+static bool cmp(const string& st1, const string& st2){
+
+    return st1+st2<st2+st1;
+}
+string PrintMinNumber(vector<int> numbers) {
+
+    vector<string> res;
+    for(int i=0;i<numbers.size();i++){
+        res.push_back(to_string(numbers[i]));
+    }
+    sort(res.begin(),res.end(),cmp);
+    string ans;
+    for(int i=0;i<res.size();i++){
+        ans+=res[i];
+    }
+    return ans;
+}
+
+# 33
+int GetUglyNumber_Solution(int index) {
+    
+    if(index < 7) return index;
+    vector<int> data;
+    data.push_back(1);
+    int index2 = 0, index3 = 0, index5 = 0;
+    while(--index){
+        int minT = min(data[index2]*2,data[index3]*3);
+        minT = min(minT,data[index5]*5);
+        if(minT==data[index2]*2) index2++;
+        if(minT==data[index3]*3) index3++;
+        if(minT==data[index5]*5) index5++;
+        data.push_back(minT);
+    }
+    return data.back();
+}
+
+# 34
+int FirstNotRepeatingChar(string str) {
+        
+    unordered_map<char,int> mp;
+    for(int i=0;i<str.size();i++){
+        if(mp.find(str[i])==mp.end())
+            mp[str[i]] = 1;
+        else mp[str[i]] += 1;
+    } 
+    for(int i=0;i<str.size();i++){
+
+        if(mp[str[i]]==1) return i;
+    } 
+    return -1;
+}
 
