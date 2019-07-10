@@ -268,7 +268,7 @@ ListNode* ReverseList(ListNode* pHead) {
     pHead->next = NULL;
     return node;
     }
-    
+
 # 16
 ListNode* Merge(ListNode* pHead1, ListNode* pHead2){
         
@@ -578,7 +578,7 @@ int GetUglyNumber_Solution(int index) {
     return data.back();
 }
 
-# 34
+# 34 找到第一个未重复的字符
 int FirstNotRepeatingChar(string str) {
         
     unordered_map<char,int> mp;
@@ -594,7 +594,7 @@ int FirstNotRepeatingChar(string str) {
     return -1;
 }
 
-# 35
+# 35 数组中的逆序对
 long long InversePairsCore(vector<int>&data,vector<int>&copy,int start,int end){
     if(start==end) {
         copy[start] = data[start];
@@ -618,7 +618,7 @@ long long InversePairsCore(vector<int>&data,vector<int>&copy,int start,int end){
         }
     }
     for(;i>=start;i--) copy[indexcopy--] = data[i];
-    for(;j>=start+length+1)copy[indexcopy--] = data[j];
+    for(;j>=start+length+1;j--)copy[indexcopy--] = data[j];
     return left+right+cnt;
 }
 int InversePairs(vector<int> data) {
@@ -635,3 +635,106 @@ int InversePairs(vector<int> data) {
         return count%1000000007;
     }
 
+# 36 找出两个链表的第一个公共结点
+ListNode* FindFirstCommonNode( ListNode* pHead1, ListNode* pHead2) {
+        int cnt1 = 0, cnt2 = 0;
+        ListNode* node = pHead1;
+        while(node){
+        	node = node->next;
+        	cnt1++;
+        }
+        node = pHead2;
+        while(node){
+        	node = node->next;
+        	cnt2++;
+        }
+
+        if(cnt1>cnt2){
+        	int dis = cnt1 - cnt2;
+        	while(dis--) pHead1 = pHead1->next;
+        }else if(cnt1<cnt2){
+        	int dis = cnt2 - cnt1;
+        	while(dis--) pHead2 = pHead2->next;
+        }
+
+        while(pHead2!=pHead1){
+        	pHead2 = pHead2->next;
+        	pHead1 = pHead1->next;
+        }
+        return pHead1;
+
+    }
+
+# 37 统计一个数字在排序数组中出现的次数
+// 将上下界的代码合二为一
+int biSearch(const vector<int> & data, double num){
+        int s = 0, e = data.size()-1;     
+        while(s <= e){
+            int mid = (e - s)/2 + s;
+            if(data[mid] < num)
+                s = mid + 1;
+            else if(data[mid] > num)
+                e = mid - 1;
+        }
+        return s;
+    }
+
+int GetNumberOfK(vector<int> data ,int k) {
+        return biSearch(data, k+0.5) - biSearch(data, k-0.5) ;
+    }
+
+# 38 树的深度
+int TreeDepth(TreeNode* pRoot){
+    
+    if(pRoot==NULL) return 0;
+    queue<TreeNode*> Q;
+    Q.push(pRoot);
+    int cnt = 0;
+    while(Q.size()){
+    	cnt++;
+    	int size = Q.size();
+    	for(int i = 0;i<size;i++){
+    		TreeNode* node = Q.front();
+    		if(node->left) Q.push(node->left);
+    		if(node->right) Q.push(node->right);
+    		Q.pop();
+    	}
+    }
+    return cnt;
+    }
+// 方法二
+int TreeDepth(TreeNode* pRoot){
+	if(!pRoot) return 0;
+
+	return max(1+TreeDepth(pRoot->left),1+TreeDepth(pRoot->right));
+}
+
+# 39 平衡二叉树判断
+bool IsBalanced_Solution(TreeNode* root) {
+    if(root == NULL) {
+        return true;
+    }
+    return abs(maxDepth(root->left) - maxDepth(root->right)) <= 1 &&
+        IsBalanced_Solution(root->left) && IsBalanced_Solution(root->right);
+    }
+      
+    int maxDepth(TreeNode* root) {
+        if(root == NULL) {
+            return 0;
+        }
+        return 1 + max(maxDepth(root->left), maxDepth(root->right));
+    }
+// 方法二 简单
+int getDepth(TreeNode* root) {
+    if (root == NULL) return 0;
+   	int left = getDepth(root->left);
+    if (left == -1) return -1;
+    int right = getDepth(root->right);
+    if (right == -1) return -1;
+    return abs(left - right) > 1 ? -1 : 1 + max(left, right);
+    }
+bool IsBalanced_Solution(TreeNode* pRoot) {
+	 return getDepth(pRoot) != -1;
+    }
+
+# 40 查找只出现一次的两个数
