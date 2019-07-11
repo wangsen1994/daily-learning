@@ -13,85 +13,91 @@
 
 namespace Base{
 
-    struct ThreadPool{
+    struct ThreadExecutor{
 
         typedef std::function<void()>Task;
         typedef std::pair<std::string,std::function<void ()>>CapTask;
+        size_t capacity;
+        std::atomic<int> in_use;
 
         bool check_empty_unguard(){
 
-            return tasks.size()==0;
+            return tasks.empty();
         }
 
-        ThreadPool(size_t capacity_):capacity(capacity_) {
-
+        ThreadExecutor(size_t capacity_):capacity(capacity_){
             close_flag.store(true);
             in_use.store(0);
 
-            auto inner_loop = [this]() {
+            auto inner_loop = [this](){
 
-                while (close_flag.load()) {
-                    std::unique_lock<std::mutex> M_lock(Mutex);
-
-                    while (check_empty_unguard()) {
-                        cond_val.wait(M_lock);
-
-                        if (!close_flag.load()) {
-
-                            M_lock.unlock();
-                            return;
+                while (close_flag.load()){
+                    std::unique_lock<std::mutex>lk(mtx);
+                    while (check_empty_unguard()){
+                        cond_empty.wait(lk);
+                        if(!close_flag.load()){
+                            lk.unlock();
+                            return;;
                         }
                     }
+
                     CapTask t = tasks.front();
                     tasks.pop();
-                    M_lock.unlock();
-
-                    printf("Run %s \n", t.first.c_str());
-                    std::atomic_fetch_add(&in_use, 1);
+                    lk.unlock();
+#if !defined(_HIDE_DEBUG_INFO)
+                    printf("RUN %s\n",t.first.c_str());
+#endif
+                    std::atomic_fetch_add(&in_use,1);
                     t.second();
-                    std::atomic_fetch_sub(&in_use, 1);
-                    printf("Finish %s \n", t.first.c_str());
+                    std::atomic_fetch_sub(&in_use,1);
+#if !defined(_HIDE_DEBUG_INFO)
+                    printf("Finish %s\n",t.first.c_str());
+#endif
                 }
             };
-
-            Thread = new std::thread[capacity](inner_loop); /* 暂时先这样 */
+            ths = new std::thread[capacity](inner_loop);
         }
-
-        ~ThreadPool(){
+        ~ThreadExecutor(){
             wait();
-            delete []Thread;
+            delete []ths;
         }
 
-        void add_task(Task &&t){
-            std::unique_lock<std::mutex> lk(Mutex);
+        void add_task(Task&& t){
+            std::unique_lock<std::mutex> lk(mtx);
             tasks.push(std::make_pair(std::string(""),t));
+#if !defined(_HIDE_DEBUG_INFO)
+            printf("Add Task Running %d Queue %d Capacity %d\n", in_use.load(), tasks.size(), capacity);
+#endif
+            cond_empty.notify_one();
+        }
 
-            printf("Add task Running %d Queue, %d Capacity %d \n",in_use.load(),tasks.size(),capacity);
-
-            cond_val.notify_one();
+        void add_task(const std::string& name,Task&& t){
+            std::unique_lock<std::mutex> lk(mtx);
+            tasks.push(std::make_pair(name,t));
+#if !defined(_HIDE_DEBUG_INFO)
+            printf("Add Task Running %d Queue %d Capacity %d\n", in_use.load(), tasks.size(), capacity);
+#endif
+            cond_empty.notify_one();
         }
 
         void stop(){
             close_flag.store(false);
-            cond_val.notify_all();
+            cond_empty.notify_all();
         }
 
         void wait(){
             stop();
-
             for(size_t i = 0;i<capacity;i++){
-
-                if(Thread[i].joinable()){
-                    Thread[i].join();
+                if(ths[i].joinable()){
+                    ths[i].join();
                 }
             }
         }
 
         void detach(){
             for(size_t i = 0;i<capacity;i++){
-
-                if(Thread[i].joinable()){
-                    Thread[i].join();
+                if(ths[i].joinable()){
+                    ths[i].detach();
                 }
             }
         }
@@ -104,12 +110,10 @@ namespace Base{
             return tasks.size();
         }
 
-        size_t capacity;
-        std::atomic<int> in_use;
-        std::thread *Thread;
+        std::thread* ths;
         std::queue<CapTask> tasks;
-        std::mutex Mutex;
-        std::condition_variable cond_val;
-        std::atomic<bool> close_flag;
+        std::mutex mtx;
+        std::condition_variable cond_empty;
+        std::atomic<bool>close_flag;
     };
 }

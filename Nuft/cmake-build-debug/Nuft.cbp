@@ -8,38 +8,38 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/Users/wangsen/CLionProjects/Nuft/cmake-build-debug"/>
+				<Option working_dir="/Users/wangsen/mycode/Nuft/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/wangsen/mycode/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/wangsen/mycode/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/wangsen/mycode/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/wangsen/mycode/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/Users/wangsen/CLionProjects/Nuft/cmake-build-debug"/>
+				<Option working_dir="/Users/wangsen/mycode/Nuft/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/wangsen/mycode/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/wangsen/mycode/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/wangsen/mycode/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/wangsen/mycode/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/Users/wangsen/CLionProjects/Nuft/cmake-build-debug"/>
+				<Option working_dir="/Users/wangsen/mycode/Nuft/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/wangsen/mycode/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/wangsen/mycode/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/wangsen/mycode/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/wangsen/mycode/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="Nuft">
-				<Option output="/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Nuft" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/Users/wangsen/CLionProjects/Nuft/cmake-build-debug"/>
+				<Option output="/Users/wangsen/mycode/Nuft/cmake-build-debug/Nuft" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/wangsen/mycode/Nuft/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -52,15 +52,15 @@
 					<Add directory="/Library/Frameworks"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 Nuft"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/wangsen/mycode/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 Nuft"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/wangsen/mycode/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/wangsen/mycode/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/wangsen/mycode/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="Nuft/fast">
-				<Option output="/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Nuft" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/Users/wangsen/CLionProjects/Nuft/cmake-build-debug"/>
+				<Option output="/Users/wangsen/mycode/Nuft/cmake-build-debug/Nuft" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/wangsen/mycode/Nuft/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -73,32 +73,32 @@
 					<Add directory="/Library/Frameworks"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 Nuft/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/wangsen/CLionProjects/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/wangsen/mycode/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 Nuft/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/wangsen/mycode/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/wangsen/mycode/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/wangsen/mycode/Nuft/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/wangsen/CLionProjects/Nuft/Base/lang_extend.h">
+		<Unit filename="/Users/wangsen/mycode/Nuft/Base/lang_extend.h">
 			<Option target="Nuft"/>
 		</Unit>
-		<Unit filename="/Users/wangsen/CLionProjects/Nuft/Base/log.h">
+		<Unit filename="/Users/wangsen/mycode/Nuft/Base/log.h">
 			<Option target="Nuft"/>
 		</Unit>
-		<Unit filename="/Users/wangsen/CLionProjects/Nuft/Base/stiring_utils.h">
+		<Unit filename="/Users/wangsen/mycode/Nuft/Base/stiring_utils.h">
 			<Option target="Nuft"/>
 		</Unit>
-		<Unit filename="/Users/wangsen/CLionProjects/Nuft/Base/thread_pool.h">
+		<Unit filename="/Users/wangsen/mycode/Nuft/Base/thread_pool.h">
 			<Option target="Nuft"/>
 		</Unit>
-		<Unit filename="/Users/wangsen/CLionProjects/Nuft/main.cpp">
+		<Unit filename="/Users/wangsen/mycode/Nuft/main.cpp">
 			<Option target="Nuft"/>
 		</Unit>
-		<Unit filename="/Users/wangsen/CLionProjects/Nuft/node.h">
+		<Unit filename="/Users/wangsen/mycode/Nuft/node.h">
 			<Option target="Nuft"/>
 		</Unit>
-		<Unit filename="/Users/wangsen/CLionProjects/Nuft/CMakeLists.txt">
+		<Unit filename="/Users/wangsen/mycode/Nuft/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>

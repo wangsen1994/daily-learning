@@ -5,6 +5,7 @@
 #include <string>
 #include <mutex>
 #include <vector>
+#include <thread>
 #include "Base/stiring_utils.h"
 #include "Base/lang_extend.h"
 
@@ -28,7 +29,7 @@ static constexpr uint64_t default_heartbeat_interval = 30;
 static constexpr uint64_t default_selection_interval = 550;
 
 #define vote_for_none "";
-#define GUARD std::lock_guard<std::mutex>guard((Mutex));
+#define GUARD std::lock_guard<std::mutex>guard((mut));
 
 #if defined(USE_GRPC_ASYNC)
 // Use Async gRPC model
@@ -157,115 +158,204 @@ struct RaftNode{
             default: return "ERROR";
         }
     }
-};
+    struct Configuration{
 
-struct Configuration{
+        static Configuration from_string(const std::string& conf_str){
 
-    static Configuration from_string(const std::string& conf_str){
+            std::vector<std::string> v = Base::split(conf_str,"\n");
+            std::vector<std::string> app = Base::split(v[0],";");
+            std::vector<std::string> rem = Base::split(v[1],";");
+            std::vector<std::string> old = Base::split(v[2],";");
 
-        std::vector<std::string> v = Base::split(conf_str,"\n");
-        std::vector<std::string> app = Base::split(v[0],";");
-        std::vector<std::string> rem = Base::split(v[1],";");
-        std::vector<std::string> old = Base::split(v[2],";");
+            return {app,rem,old};
 
-        return {app,rem,old};
-
-    }
-
-    static std::string to_string(const Configuration& conf){
-
-        std::string conf_str;
-
-        conf_str += Base::join(conf.app.begin(),conf.app.end(),";") + "\n";
-        conf_str += Base::join(conf.rem.begin(),conf.rem.end(),";") + "\n";
-        conf_str += Base::join(conf.old.begin(),conf.old.end(),";") + "\n";
-
-        return conf_str;
-    }
-
-    void init(){
-
-        oldvote_thres = old.size();
-        newvote_thres = oldvote_thres;
-
-        for(auto& it:app){
-
-            if(!Base::contains(old,it)){newvote_thres++;}
         }
 
-        for(auto& it:rem){
-            if(Base::contains(old,it)){ newvote_thres--;}
+        static std::string to_string(const Configuration& conf){
+
+            std::string conf_str;
+
+            conf_str += Base::join(conf.app.begin(),conf.app.end(),";") + "\n";
+            conf_str += Base::join(conf.rem.begin(),conf.rem.end(),";") + "\n";
+            conf_str += Base::join(conf.old.begin(),conf.old.end(),";") + "\n";
+
+            return conf_str;
         }
 
-    }
+        void init(){
 
-    Configuration(
-            const std::vector<std::string>& app_,
-            const std::vector<std::string>& rem_,
-            const std::vector<Nodename>& old_):app(app_),rem(rem_),old(old_){
-        init();
-    }
+            oldvote_thres = old.size();
+            newvote_thres = oldvote_thres;
 
-    Configuration(
-            const std::vector<std::string>& app_,
-            const std::vector<std::string>& rem_,
-            const std::map<Nodename,NodePeer*>old_, const Nodename& leader_exclusive)
-            :app(app_),rem(rem_){
+            for(auto& it:app){
 
-        for(auto&& it: old_){
-            old.push_back(it.first);
+                if(!Base::contains(old,it)){newvote_thres++;}
+            }
+
+            for(auto& it:rem){
+                if(Base::contains(old,it)){ newvote_thres--;}
+            }
+
         }
-        old.push_back(leader_exclusive);
-        init();
-    }
 
-    std::vector<std::string> app;
-    std::vector<std::string> rem;
-    std::vector<std::string> old;
+        Configuration(
+                const std::vector<std::string>& app_,
+                const std::vector<std::string>& rem_,
+                const std::vector<Nodename>& old_):app(app_),rem(rem_),old(old_){
+            init();
+        }
+
+        Configuration(
+                const std::vector<std::string>& app_,
+                const std::vector<std::string>& rem_,
+                const std::map<Nodename,NodePeer*>old_, const Nodename& leader_exclusive)
+                :app(app_),rem(rem_){
+
+            for(auto&& it: old_){
+                old.push_back(it.first);
+            }
+            old.push_back(leader_exclusive);
+            init();
+        }
+
+        std::vector<std::string> app;
+        std::vector<std::string> rem;
+        std::vector<std::string> old;
 
 
-    IndexID  index1 = -1;
-    IndexID  index2 = -1;
-    size_t oldvote_thres = 0;
-    size_t newvote_thres = 0;
+        IndexID  index1 = -1;
+        IndexID  index2 = -1;
+        size_t oldvote_thres = 0;
+        size_t newvote_thres = 0;
 
-    enum State{
+        enum State{
 
-        BLANK = 0,
-        STAGING,
-        OLD_JOINT,
-        JOINT,
-        NEW_JOINT,
-        NEW
+            BLANK = 0,
+            STAGING,
+            OLD_JOINT,
+            JOINT,
+            NEW_JOINT,
+            NEW
+        };
+
+        State state = STAGING;
+
+        bool is_in_old(const std::string& peer_name) const {
+            return Base::contains(old,peer_name);
+        }
+
+        bool is_in_new(const std::string& peer_name) const {
+            return (is_in_old(peer_name)&&!Base::contains(rem,peer_name))||Base::contains(app,peer_name);
+        }
+
+        bool is_in_joint(const std::string& peer_name) const {
+
+            return is_in_old(peer_name)||is_in_new(peer_name);
+        }
     };
 
-    State state = STAGING;
+    TermID current_term = default_index_cursor;
+    Nodename vote_for = vote_for_none;
+    std::vector<raft_message::LogEntry> logs;
+    std::string leader_name;
+    struct Configuration* trans_conf = nullptr;
+    struct Persister* persister = nullptr;
 
-    bool is_in_old(const std::string& peer_name) const {
-        return Base::contains(old,peer_name);
+    // RSM usage
+    IndexID  commit_index = default_index_cursor;
+    IndexID  last_applied = default_index_cursor;
+
+    // Leader exclusive
+
+    // Node information
+    Nodename name;
+    NodeState state;
+    bool paused = false;
+    bool tobe_destructed = false;
+    uint64_t last_tick = 0;                 // Reset every `default_heartbeat_interval`
+    uint64_t elect_timeout_due = 0;         // At this point the Follower start election
+    uint64_t election_fail_timeout_due = 0; // At this point the Candidate's election timeout
+
+    // candidate exclusive 独占
+    size_t vote_got = 0;
+    size_t new_vote = 0;
+    size_t old_vote = 0;
+
+    // Network
+    std::map<Nodename,NodePeer*> peers;
+    std::vector<NodePeer*> tobe_removed_peers;
+#if defined(USE_GRPC_STREAM)
+    RaftStreamServerContext* raft_message_server = nullptr;
+#else
+    RaftServerContext* raft_message_server = nullptr;
+#endif
+    std::thread timer_thread;
+    uint64_t start_timepoint;  // TODO Reject RPC from previous test cases.
+    uint64_t last_timepoint;   // TODO Reject RPC from previous meeage from current Leader.
+    uint64_t last_seq;
+
+#if defined(USE_GRPC_SYNC)&&!defined(USE_GRPC_STREAM)&&!defined(USE_GRPC_SYNC_BARE)
+    Base::ThreadExecutor* sync_client_task_queue = nullptr;
+#endif
+
+    mutable std::mutex mut;
+    NuftCallbackFunc callbacks[NUFT_CB_SIZE];
+    bool debugging = false;
+
+    void print_state(std::lock_guard<std::mutex> & guard){
+        printf("%15s %12s %5s %9s %7s %7s %6s %6s\n",
+               "Name", "State", "Term", "log size", "commit", "peers", "run", "trans");
+        printf("%15s %12s %5llu %9u %7lld %7u %6s %6d\n", name.c_str(),
+               RaftNode::node_state_name(state), current_term,
+               logs.size(), commit_index, peers.size(),
+               is_running(guard)? "T" : "F", (!trans_conf) ? 0 : trans_conf->state);
     }
 
-    bool is_in_new(const std::string& peer_name) const {
-        return (is_in_old(peer_name)&&!Base::contains(rem,peer_name))||Base::contains(app,peer_name);
+    NuftResult invoke_callback(Nuft_CB_Type type,NuftCallbackArg arg){
+        if(callbacks[type]){
+            return (callbacks[type])(type,&arg);
+        }
+        return Nuft_OK;
     }
 
-    bool is_in_joint(const std::string& peer_name) const {
+    void set_callback(std::lock_guard<std::mutex>& guard, Nuft_CB_Type type,NuftCallbackFunc func){
+        callbacks[type] = func;
+    }
 
-        return is_in_old(peer_name)||is_in_new(peer_name);
+    void ste_callback(Nuft_CB_Type type,NuftCallbackFunc func){
+        GUARD
+        set_callback(guard,type,func);
+    }
+
+    IndexID get_base_index()const {
+        if(logs.size()==0){
+            return default_index_cursor;
+        }
+        return logs[0].index();
+    }
+
+    IndexID last_log_index()const {
+        if(logs.size()==0){
+            return default_index_cursor;
+        }
+
+        if(get_base_index()==0){
+            assert(logs.size()==logs.back().index+1);
+        }
+        return logs.back().index();
+    }
+
+    IndexID last_log_term()const {
+        return logs.size()==0?default_term_cursor:logs.back().term();
+    }
+
+    ::raft_message::LogEntry& gl(IndexID index){
+        IndexID base = get_base_index();
+        if(index-base>=0){
+            return logs[index-base];
+        }else {
+            debug_node("Access index %lld\n",index);
+            assert(false);
+        }
     }
 };
-
-TermID current_term = default_term_cursor;
-Nodename vote_for = vote_for_none;
-
-std::vector<raft_message::LogEntry> logs;
-std::string leader_name;
-
-struct Configuration* tran_conf = nullptr;
-struct Persister* persister = nullptr;
-
-IndexID commit_index = default_index_cursor;
-IndexID last_applied = default_index_cursor;
-
-
-Nodename name;
