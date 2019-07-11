@@ -738,3 +738,39 @@ bool IsBalanced_Solution(TreeNode* pRoot) {
     }
 
 # 40 查找只出现一次的两个数
+void FindNumsAppearOnce(vector<int> data,int* num1,int *num2) {
+
+    int n = data.size();
+    if(data.size() < 2) return ;
+    int index = 0,flag = 1;
+    for(int i=0;i<n;i++){
+        index ^= data[i];
+    }
+    while((index&flag)==0) flag<<=1;
+    *num1 = index;
+    *num2 = index;
+
+    for(int i = 0; i < n; ++ i ){
+            if((flag & data[i]) == 0) *num2 ^= data[i];
+            else *num1 ^= data[i];
+        }
+    }
+
+# 41 和为S的连续正整数序列
+vector<vector<int> > FindContinuousSequence(int sum) {
+        vector<vector<int> > res;
+        deque<int> ans;
+        int tmp = 0;
+        for(int i = 1;i<sum;i++){
+            tmp+=i; ans.push_back(i);
+            while(tmp>sum){
+                tmp-=ans.front();
+                ans.pop_front();
+            }
+            if(tmp==sum) res.push_back(vector<int>(ans.begin(),ans.end()));
+        }
+        return res;
+    }
+
+
+
