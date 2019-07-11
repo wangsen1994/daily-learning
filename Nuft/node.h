@@ -358,4 +358,19 @@ struct RaftNode{
             assert(false);
         }
     }
+    size_t find_entry(IndexID index,TermID term){
+        for(int i = logs.size()-1;i>=0;i--){
+            if(logs[i].term()==term&&logs[i].index()==index){
+                return i;
+            }
+        }
+        return default_index_cursor;
+    }
+    size_t cluster_size()const {
+        return peers.size()+1;
+    }
+    bool enough_votes(size_t vote)const {
+        size_t voters = compute_vote_thres();
+        return vote>voters/2;
+    }
 };
