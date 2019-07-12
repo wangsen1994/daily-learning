@@ -797,5 +797,15 @@ vector<int> FindNumbersWithSum(vector<int> array,int sum) {
 # 43 左旋转字符串
 string LeftRotateString(string str, int n) {
         
+        int length = str.size();
+        if(length==0) return "";
+        n = n%length;
+        str+=str;
+        return str.substr(n,length);
+    }
+
+# 44
+string ReverseSentence(string str) {
+        
     }
 
