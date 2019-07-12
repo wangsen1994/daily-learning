@@ -772,5 +772,30 @@ vector<vector<int> > FindContinuousSequence(int sum) {
         return res;
     }
 
+# 42 和为S的两个数
+vector<int> FindNumbersWithSum(vector<int> array,int sum) {
+        
+        vector<int> res;
+        int l = 0, r = array.size()-1;
+        while(l<r){
+            while(l<r&&array[l]+array[r]>sum) r--;
+            while(l<r&&array[l]+array[r]<sum) l++;
+            if(array[l]+array[r]==sum){
+                if(res.empty()) { 
+                    res.push_back(array[l]);
+                    res.push_back(array[r]);
+                } else if(res[0]*res[1]>array[l]*array[r]){
+                    res[0] = array[l];
+                    res[1] = array[r];
+                }
+                l++;
+            } 
+        }
+        return res;
+    }
 
+# 43 左旋转字符串
+string LeftRotateString(string str, int n) {
+        
+    }
 
