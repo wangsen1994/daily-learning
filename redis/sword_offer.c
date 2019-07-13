@@ -804,8 +804,101 @@ string LeftRotateString(string str, int n) {
         return str.substr(n,length);
     }
 
-# 44
+# 44 翻转单词顺序列
+void revesehelper(string& str, int l, int r) {
+	while (l < r) { swap(str[l++], str[r--]); }
+}
 string ReverseSentence(string str) {
+
+	int n = str.size();
+	int front = -1, last = 0;
+	for (; last < n; last++) {
+		if (front != -1 && str[last] == ' ') {
+			revesehelper(str, front, last - 1);
+			front = -1;
+		}
+		else if (front == -1 && str[last] != ' ')front = last;
+	}
+	if (front != -1) revesehelper(str, front, last - 1);
+	revesehelper(str, 0, n - 1);
+	return str;
+}
+
+# 45 扑克牌顺子
+bool IsContinuous( vector<int> numbers ) {
         
+        if(numbers.empty()) return false;
+        sort(numbers.begin(),numbers.end());
+        int tmp = 0;
+        int pos = 0;
+        while(pos<numbers.size()&&numbers[pos]==0) {tmp++;pos++;}
+        for(pos+=1;pos<numbers.size();pos++){
+
+        	int dis = numbers[pos] - numbers[pos-1] - 1;
+        	if(dis<0) return false;
+        	tmp -= dis;
+        	if(tmp>=0) continue;
+        	else return false;
+        }
+        return true;
     }
 
+# 46 圆圈中最后剩下的数 约瑟夫环问题
+int LastRemaining_Solution(int n, int m){
+        int p = 0;
+        for(int i=2;i<=n;i++){
+        	p = (p+m)%i;
+        }
+        return p;
+    }
+
+# 47 累加 短路求值原理
+int Sum_Solution(int n) {
+        int ans = n;
+        ans&&(ans+=Sum_Solution(n-1));
+        return ans;
+    }
+
+# 48 整数之和
+int Add(int num1, int num2){
+
+	int n1,n2;
+	n1 = (num1&num2)<<1;  // 进位
+	n2 = num1^num2;       // 非进位
+
+	while(n1&n2){
+		num1=n1;num2=n2;
+        n1=(num1&num2)<<1;
+        n2=num1^num2;
+	}
+	return n1|n2;
+    }
+
+# 49 字符串转整数
+int StrToInt(string str) {
+        int n = str.size(), s = 1;
+        long long res = 0;
+        if(!n) return 0;
+        if(str[0] == '-') s = -1;
+        for(int i = (str[0] ==  '-' || str[0] == '+') ? 1 : 0; i < n; ++i){
+            if(!('0' <= str[i] && str[i] <= '9')) return 0;
+            res = (res << 1) + (res << 3) + (str[i] & 0xf);//res=res*10+str[i]-'0';
+        } 
+        return res * s;
+    }
+
+# 50 找出任意重复数字 注意与leetcode中《数据中重复的数据》之间的区别
+bool duplicate(int numbers[], int length, int* duplication) {
+        
+        for(int i = 0;i<length;i++){
+        	while(numbers[i]!=i){
+
+        		if(numbers[numbers[i]]==numbers[i]){
+        		*duplication = numbers[i];
+        		return true;
+        		}
+        		swap(numbers[i],numbers[numbers[i]]);
+        	}
+        }
+        return false;
+    }
