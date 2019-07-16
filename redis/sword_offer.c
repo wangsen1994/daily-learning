@@ -1016,4 +1016,124 @@ ListNode* EntryNodeOfLoop(ListNode* pHead){
 # 56 删除链表中重复的节点
 ListNode* deleteDuplication(ListNode* pHead){
 
+    if (pHead==NULL || pHead->next==NULL) return pHead;
+    ListNode* Head = new ListNode(0);
+    Head->next = pHead;
+    ListNode* pre  = Head;
+    ListNode* last = Head->next;
+    while (last!=NULL){
+        if(last->next!=NULL && last->val == last->next->val){
+            // 找到最后的一个相同节点
+            while (last->next!=NULL && last->val == last->next->val){
+                last = last->next;
+            }
+            pre->next = last->next;
+            last = last->next;
+        }else{
+            pre = pre->next;
+            last = last->next;
+        }
     }
+    return Head->next;
+}
+
+# 57 中序遍历下一个节点
+TreeLinkNode* GetNext(TreeLinkNode* pNode){
+        
+        if (pNode == NULL)return NULL;
+        TreeLinkNode* node = pNode;
+        if(pNode->right){
+
+            TreeLinkNode* cur = pNode->right;
+            while(cur->left) cur = cur->left;
+            return cur;
+        }
+        while (pNode->next != NULL)  // 注意作为右孩子的情况，左孩子则直接返回父节点
+        {
+            TreeLinkNode *proot = pNode->next;
+            if (proot->left == pNode)
+                return proot;
+            pNode = pNode->next;
+        }
+        return NULL;
+    }
+
+# 58 判断对称二叉树
+bool helper(TreeNode* lNode,TreeNode* rNode){
+    if(lNode==NULL) return rNode==NULL;
+    if(rNode==NULL) return false;
+    if(lNode->val!=rNode->val) return false;
+    return helper(lNode->left,rNode->right)&&helper(lNode->right,rNode->left);
+}
+bool isSymmetrical(TreeNode* pRoot){
+    
+    if(pRoot==NULL)return true;
+    return helper(pRoot->left,pRoot->right);
+}
+
+# 59 Z型打印树
+vector<vector<int> > Print(TreeNode* pRoot) {
+        
+        if(pRoot==NULL) return {};
+        stack<TreeNode*> S1;
+        stack<TreeNode*> S2;
+        vector<vector<int>> res;
+        S1.push(pRoot);
+        while(S1.size()||S2.size()){
+            vector<int> ans;
+            int size = S1.size();
+            for(int i = 0;i<size;i++){
+                TreeNode* node = S1.top();
+                ans.push_back(node->val);
+                if(node->left) S2.push(node->left);
+                if(node->right) S2.push(node->right);
+                S1.pop();
+            }
+            if(ans.size()) res.push_back(ans);
+            ans.clear();
+            size = S2.size();
+            for(int i = 0;i<size;i++){
+                TreeNode* node = S2.top();
+                ans.push_back(node->val);
+                if(node->right) S1.push(node->right);
+                if(node->left) S1.push(node->left);
+                S2.pop();
+            }
+            if(ans.size()) res.push_back(ans);
+            ans.clear();
+        }
+        return res;
+    }
+
+# 60 从左至右按层打印树
+vector<vector<int> > Print(TreeNode* pRoot) {
+    if(pRoot==NULL) return {};
+    queue<TreeNode*> Q;
+    vector<vector<int>> res;
+    Q.push(pRoot);
+    while(Q.size()){
+        vector<int> ans;
+        int size = Q.size();
+        for(int i = 0;i<size;i++){
+            TreeNode* node = Q.top();
+            ans.push_back(node->val);
+            if(node->left) Q.push(node->left);
+            if(node->right) Q.push(node->right);
+            Q.pop();
+        }
+        res.push_back(ans);
+    }
+    return res;
+}
+
+# 61 序列化二叉树和反序列化二叉树
+class Solution {
+public:
+    char* Serialize(TreeNode *root) {    
+        
+    }
+    TreeNode* Deserialize(char *str) {
+    
+    }
+};
+
