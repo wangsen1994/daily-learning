@@ -922,4 +922,98 @@ vector<int> multiply(const vector<int>& A) {
 # 52 正则表达式匹配
 bool match(char* str, char* pattern){
     
+    if(*str=='\0' && *pattern=='\0') return true;
+    if(*str!='\0' && *pattern=='\0') return false;
+
+    if (*(pattern+1) != '*'){
+            if (*str == *pattern || (*str != '\0' && *pattern == '.')) // 注意 *str != '\0'
+                return match(str+1, pattern+1);
+            else
+                return false;
+        }
+    else{
+            if (*str == *pattern || (*str != '\0' && *pattern == '.'))
+                return match(str, pattern+2) || match(str+1, pattern);
+            else
+                return match(str, pattern+2);
+        }
+    }   
+
+# 53
+bool isNumeric(char* str){
+
+// 标记符号、小数点、e是否出现过
+    bool sign = false, decimal = false, hasE = false;
+    for (int i = 0; i < strlen(str); i++) {
+        if (str[i] == 'e' || str[i] == 'E') {
+            if (i == strlen(str)-1) return false; // e后面一定要接数字
+            if (hasE) return false;  // 不能同时存在两个e
+            hasE = true;
+        } else if (str[i] == '+' || str[i] == '-') {
+        // 第二次出现+-符号，则必须紧接在e之后
+            if (sign && str[i-1] != 'e' && str[i-1] != 'E') return false;
+            // 第一次出现+-符号，且不是在字符串开头，则也必须紧接在e之后
+            if (!sign && i > 0 && str[i-1] != 'e' && str[i-1] != 'E') return false;
+            sign = true;
+        } else if (str[i] == '.') {
+            // e后面不能接小数点，小数点不能出现两次
+            if (hasE || decimal) return false;
+                decimal = true;
+        } else if (str[i] < '0' || str[i] > '9') // 不合法字符
+            return false;
+        }
+        return true;
+    }
+
+# 54 字符流中第一个不重复的字符
+class Solution
+{
+public:
+  //Insert one char from stringstream
+    void Insert(char ch)
+    {
+         if(M.find(ch)==M.end()){
+            M[ch] = 1;
+            Q.push(ch);
+         } else {
+            M[ch]++;
+            while(M[Q.front()]>1) Q.pop();
+         }
+    }
+  //return the first appearence once char in current stringstream
+    char FirstAppearingOnce()
+    {
+        if(Q.empty()) return '#';
+        else return Q.front();
+    }
+    queue<char> Q;
+    map<char,int> M;
+
+};
+
+# 55 链表中环的入口结点
+ListNode* EntryNodeOfLoop(ListNode* pHead){
+
+    if(pHead==NULL||pHead->next==NULL||pHead->next->next==NULL) return NULL;
+    ListNode* fast = pHead->next->next;
+    ListNode* slow = pHead->next;
+
+    while(fast!=slow){
+        if(fast->next!=NULL&&fast->next->next!=NULL){
+            fast = fast->next->next;
+            slow = slow->next;
+        }else return NULL;
+    }
+
+    fast = pHead;
+    while(fast!=slow){
+        fast = fast->next;
+        slow = slow->next;
+    }
+    return slow;
+    }
+
+# 56 删除链表中重复的节点
+ListNode* deleteDuplication(ListNode* pHead){
+
     }
