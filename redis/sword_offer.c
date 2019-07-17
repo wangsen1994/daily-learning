@@ -1137,3 +1137,148 @@ public:
     }
 };
 
+
+# 快速排序
+void sorthelper(vector<int>& data,int l,int r){
+    if(l>=r) return ;
+    int i = l, j = r,pivot = data[r];
+    while(l<r){
+
+        while(l<r&&data[i]<=pivot)i++;
+        data[j] = data[i];
+        while(l<r&&data[j]>=pivot)j--;
+        data[i] = data[j];
+    }
+    data[i] = pivot;
+    sorthelper(data,l,i-1);
+    sorthelper(data,j+1,r);
+}
+void quicksort(vector<int> data,int n){
+    if(n<=0) return ;
+    quicksort(data,0,n-1);
+}
+
+# 插入排序
+void insertsort(vector<int> data,int n){
+
+    for(int i=1,j;i<n-1;i++){
+        for(j=i-1;j>=0&&data[i]<data[j];j--)
+            data[j+1] = data[j];
+        data[j] = data[i];
+    }
+}
+
+# 冒泡排序
+void bubblesort(vector<int> data,int n){
+
+    bool flag = true;
+    for(int i = 0;i<n-1&&flag;i++){
+        for(int j = n-1,flag = false;j>i;j--){
+            if(data[j]<data[j-1])
+            {
+                swap(data[j],data[j-1]);
+                flag = true;
+            }
+        }
+    }
+}
+
+# 选择排序
+void selectsort(vector<int> data,int n){
+
+    for(int i = 0;i<n-1;i++){
+        int pos = i;
+        for(int j = i+1;j<n;j++){
+            if(data[j]<data[i]) pos = j;
+        }
+        swap(data[pos],data[i]);
+    }
+}
+
+# 堆排序
+void moveDown(vector<int>data,int first,int last){
+
+    int largest = first*2+1;
+    while(largest<=last){
+        if(largest<last&&data[largest]<largest[largest+1])
+            largest = largest + 1;
+        if(data[first]<data[largest]){
+            swap(data[first],data[largest]);
+            first = largest;
+            largest = first*2 + 1;
+        }else largest = last + 1;
+    }
+}
+
+void heapsort(vector<int> data,int n){
+
+    for(int i = n/2-1;i>=0;i--){
+        moveDown(data,i,n-1);
+    }
+    for(int i = n-1;i>0;i--){
+        swap(data[0],data[i]);
+        moveDown(data,0,i);
+    }
+}
+
+# 归并排序
+void merge(vector<int>data,int l,int mid,int r){
+    int len = r - l + 1;
+    vector<int> tmp(len);
+    int i = l, j = mid+1;
+    int pos = 0
+    while(i<=mid&&j<=r){
+        if(data[i]<data[j]) tmp[pos++] = data[i++];
+        else tmp[pos++] = data[j++];
+    }
+    while(i<=mid) tmp[pos++] = data[i++];
+    while(j<=r) tmp[pos++] = data[j++];
+
+    for(int i = 0;i<len;i++){
+        data[l+i] = tmp[i];
+    }
+}
+
+void mergesort(vector<int> data,int l, int r){
+
+    if(l>=r) return;
+    int mid = l + (r-l)/2;
+    mergesort(data,l,mid);
+    mergesort(data,mid+1,r);
+    merge(data,l,mid,r);
+}
+
+# LRU
+class LRUcache{
+public:
+    LRUcache(int cap_):capacity(cap_){}
+
+    int get(int key){
+        auto it = m.find(key);
+        if(it==m.end()) return -1;
+        l.splice(l.begin(),l,it->second);
+
+        return it->second->second;
+    }
+
+    void put(int key,int val){
+        auto it = m.find(key);
+        if(it!=m.end())l.erase(it->second);
+        l.push_front(make_pair(key,val));
+        m[key] = l.begin();
+
+        if(m.size()>capacity){
+            int k = l.rbegin()->first;
+            l.pop_back();
+            m.erase(k);
+        }
+    }
+
+private:
+    int capacity;
+    list<pair<int,int>> l;
+    unordered_map<int, list<pair<int,int>>::iterator>m;
+}
+
+
+
