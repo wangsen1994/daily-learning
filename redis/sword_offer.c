@@ -1127,16 +1127,151 @@ vector<vector<int> > Print(TreeNode* pRoot) {
 }
 
 # 61 序列化二叉树和反序列化二叉树
-class Solution {
+class Solution {  
 public:
-    char* Serialize(TreeNode *root) {    
-        
+    char* Serialize(TreeNode *root) {
+       if(root == NULL)
+           return NULL;
+        string str;
+        Serialize(root, str);
+        char *ret = new char[str.length() + 1];
+        int i;
+        for(i = 0; i < str.length(); i++){
+            ret[i] = str[i];
+        }
+        ret[i] = '\0';
+        return ret;
     }
+    void Serialize(TreeNode *root, string& str){
+        if(root == NULL){
+            str += '#';
+            return ;
+        }
+        string r = to_string(root->val);
+        str += r;
+        str += ',';
+        Serialize(root->left, str);
+        Serialize(root->right, str);
+    }
+     
     TreeNode* Deserialize(char *str) {
-    
+        if(str == NULL)
+            return NULL;
+        TreeNode *ret = Deserialize(&str);
+ 
+        return ret;
+    }
+    TreeNode* Deserialize(char **str){//由于递归时，会不断的向后读取字符串
+        if(**str == '#'){  //所以一定要用**str,
+            ++(*str);         //以保证得到递归后指针str指向未被读取的字符
+            return NULL;
+        }
+        int num = 0;
+        while(**str != '\0' && **str != ','){
+            num = num*10 + ((**str) - '0');
+            ++(*str);
+        }
+        TreeNode *root = new TreeNode(num);
+        if(**str == '\0')
+            return root;
+        else
+            (*str)++;
+        root->left = Deserialize(str);
+        root->right = Deserialize(str);
+        return root;
     }
 };
 
+# 62 二叉树第k个节点
+class Solution {
+    int count = 0;
+public:
+    TreeNode* KthNode(TreeNode* pRoot,  int k)
+    {
+        if(pRoot){ 
+                TreeNode *ret = KthNode(pRoot->left, k);
+                if(ret) return ret;
+                if(++count == k) return pRoot;
+                ret = KthNode(pRoot->right,k);
+                if(ret) return ret;
+        }
+        return nullptr;
+    }
+};
+
+# 63 数据流中位数
+class Solution {
+public:
+    void Insert(int num)
+    {
+        count++;
+        // 元素个数是偶数时,将小顶堆堆顶放入大顶堆
+        if(count%2==0){
+            Q1.push(num);
+            Q2.push(Q1.top());
+            Q1.pop();
+        }
+        else{
+            Q2.push(num);
+            Q1.push(Q2.top());
+            Q2.pop();
+        }
+    }
+
+    double GetMedian()
+    { 
+
+        if(count&0x1){
+            return Q1.top();
+        }
+        else{
+            return double((Q1.top()+Q2.top())/2.0);
+        }
+    }
+private:
+    int count = 0;
+    priority_queue<int,vector<int>,less<int>> Q1;
+    priority_queue<int,vector<int>,greater<int>> Q2;
+};
+
+# 64 滑动窗口值
+vector<int> maxInWindows(const vector<int>& num, unsigned int size){
+        deque<int> q;
+        vector<int> res;
+        for(int i = 0;i<num.size();i++){
+
+            while(q.size()&&num[q.back()]<=num[i])
+                q.pop_back();
+            while(q.size()&&i-q.front()+1>size)
+                q.pop_front();
+            q.push_back(i);
+            if(size&&i+1>=size) res.push_back(num[q.front()]);
+        }
+        return res;
+    }
+
+# 65 矩阵路径查找 有点问题
+bool helper(char* matrix,vector<vector<bool>>M,char* str, int rows, int cols,int x,int y){
+    if(*str=='\0') return true;
+    if(x<0||x>=rows) return false;
+    if(y<0||y>=cols) return false;
+    if(matrix[x*cols+y]!=*str||M[x][y]==false) return false;
+    M[x][y]==false;
+    bool flag = helper(matrix,M,str+1,rows,cols,x+1,y)||helper(matrix,M,str+1,rows,cols,x-1,y)||
+                helper(matrix,M,str+1,rows,cols,x,y+1)||helper(matrix,M,str+1,rows,cols,x,y-1);
+    M[x][y]==true;
+    return flag;
+}
+bool hasPath(char* matrix, int rows, int cols, char* str){
+    vector<vector<bool>> M(rows,vector<bool>(cols,true));
+    for(int i = 0;i<rows;i++){
+        for(int j=0;j<cols;j++){
+            if(helper(matrix,M,str,rows,cols,i,j))
+                return true;
+        }
+    }
+    return false;
+}
 
 # 快速排序
 void sorthelper(vector<int>& data,int l,int r){
@@ -1280,5 +1415,42 @@ private:
     unordered_map<int, list<pair<int,int>>::iterator>m;
 }
 
+# KMP
+void makeNext(const string P,vector<int>& next)
+{
+    int q,k;
+    int m = P.size();
+    next[0] = 0;
+    for (q = 1,k = 0; q < m; ++q)
+    {
+        while(k > 0 && P[q] != P[k])
+            k = next[k-1];
+        if (P[q] == P[k])
+        {
+            k++;
+        }
+        next[q] = k;
+    }
+}
 
+int KMP(const string T,const string P)
+{
+    int n = T.size(),m = P.size();
+    int i,q;
+    vector<int> next;
+    makeNext(P,next);
+    for (i = 0,q = 0; i < n; ++i)
+    {
+        while(q > 0 && P[q] != T[i])
+            q = next[q-1];
+        if (P[q] == T[i])
+        {
+            q++;
+        }
+        if (q == m)
+        {
+            printf("Pattern occurs with shift:%d\n",(i-m+1));
+        }
+    }    
+}
 
