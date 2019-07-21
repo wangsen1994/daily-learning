@@ -1,4 +1,4 @@
-# 1
+# 1 二维数组查找
 bool Find(int target, vector<vector<int> > array) {
   	
   	int n = array.size(), m = array[0].size();
@@ -13,7 +13,8 @@ bool Find(int target, vector<vector<int> > array) {
   	return false;
 
     }
-# 2
+
+# 2 替换字符串空格
 void replaceSpace(char *str,int length) {
 	
 	if(str==NULL||length<0)return ;
@@ -38,7 +39,7 @@ void replaceSpace(char *str,int length) {
 
 	}
 
-# 3
+# 3 从尾打印链表
 vector<int> printListFromTailToHead(ListNode* head) {
         
         if(!head) return {};
@@ -57,7 +58,7 @@ vector<int> printListFromTailToHead(ListNode* head) {
     }
 
 
-# 4
+# 4 重建二叉树
 TreeNode* helper(vector<int> pre,vector<int> vin,int prel,int prer,int inl,int inr){
 	
 	if(prel>prer||inl>inr) return NULL;
@@ -79,7 +80,7 @@ TreeNode* reConstructBinaryTree(vector<int> pre,vector<int> vin) {
 	return helper(pre,vin,0,pre.size()-1,0,vin.size()-1);
     }
 
-# 5
+# 5 栈实现队列
 class Solution
 {
 public:
@@ -107,7 +108,7 @@ private:
     stack<int> stack2;
 };
 
-# 6
+# 6 旋转数组最小值
 int minNumberInRotateArray(vector<int> rotateArray) {
         
         int n = rotateArray.size();
@@ -129,7 +130,7 @@ int minNumberInRotateArray(vector<int> rotateArray) {
         return rotateArray[l];
     }
 
-# 7
+# 7 斐波拉契数组
 int Fibonacci(int n) {
 
 	vector<int> data = {0,1};
@@ -146,7 +147,7 @@ int Fibonacci(int n) {
 
     }
 
-# 8
+# 8 跳台阶
 int jumpFloor(int number) {
        
     vector<int> data = {0,1,2};
@@ -166,7 +167,7 @@ int jumpFloor(int number) {
 
     }
 
-# 9
+# 9 暴力跳台阶
 int jumpFloorII(int number) {
 
     vector<int> data = {1,1};
@@ -182,7 +183,7 @@ int jumpFloorII(int number) {
     return data.back();
     }
 
-# 10
+# 10 矩阵覆盖
 int rectCover(int number) {
     vector<int> data{0,1,2};
     if(number<=2) return data[number];
@@ -196,7 +197,7 @@ int rectCover(int number) {
     return data.back();
     }
 
-# 11
+# 11 二进制1的个数
 int  NumberOf1(int n) {
     
     int cnt = 0;
@@ -207,7 +208,7 @@ int  NumberOf1(int n) {
     return cnt;
     }
 
-# 12  
+# 12  整数次方
 double Power(double base, int exponent) {
     long long res = 1;
 
@@ -227,7 +228,7 @@ double Power(double base, int exponent) {
     }
     }
 
-# 13
+# 13 奇数在前，偶数在后
 void reOrderArray(vector<int> &array) {
         
         int n = array.size();
@@ -245,7 +246,7 @@ void reOrderArray(vector<int> &array) {
         }
     }
 
-# 14
+# 14 倒数第k个节点
 ListNode* FindKthToTail(ListNode* pListHead, unsigned int k) {
     
     ListNode* node = pListHead;
@@ -259,7 +260,7 @@ ListNode* FindKthToTail(ListNode* pListHead, unsigned int k) {
     return pListHead;
     }
 
-# 15
+# 15 翻转链表
 ListNode* ReverseList(ListNode* pHead) {
 
     if(!pHead||!pHead->next) return pHead;
@@ -269,7 +270,7 @@ ListNode* ReverseList(ListNode* pHead) {
     return node;
     }
 
-# 16
+# 16 合并有序链表
 ListNode* Merge(ListNode* pHead1, ListNode* pHead2){
         
 		ListNode* dummy = new ListNode(-1);
@@ -294,7 +295,7 @@ ListNode* Merge(ListNode* pHead1, ListNode* pHead2){
 		return dummy->next;
     }
 
-# 17
+# 17 子树查找
 bool helper(TreeNode* pRoot1, TreeNode* pRoot2){
 	if(!pRoot2) return true;
 	if(!pRoot1) return false;
@@ -309,7 +310,7 @@ bool HasSubtree(TreeNode* pRoot1, TreeNode* pRoot2){
 	return helper(pRoot1,pRoot2)|| HasSubtree(pRoot1->left,pRoot2)||HasSubtree(pRoot1->right,pRoot2);
 }
 
-# 18
+# 18 二叉树的镜像
 void Mirror(TreeNode *pRoot) {
 	if(pRoot==NULL) return;
 	if(!pRoot->left&& !pRoot->right) return;
@@ -321,7 +322,7 @@ void Mirror(TreeNode *pRoot) {
     if(pRoot->right) Mirror(pRoot->right);
     }
 
-# 19
+# 19 顺时针打印矩阵
 vector<int> printMatrix(vector<vector<int> > matrix) {
 	int n = matrix.size(),m=matrix[0].size();
 	if(n==1) return matrix[0];
@@ -337,7 +338,7 @@ vector<int> printMatrix(vector<vector<int> > matrix) {
 	return res;
     }
 
-# 20
+# 20 含min的栈
 class Solution {
 public:
     void push(int value) {
@@ -361,7 +362,7 @@ public:
     stack<int> stmin;
 };
 
-# 21
+# 21 栈序判断
 bool IsPopOrder(vector<int> pushV,vector<int> popV) {
         
         stack<int> st;
@@ -378,7 +379,7 @@ bool IsPopOrder(vector<int> pushV,vector<int> popV) {
        	return st.empty()?true:false;
 }
 
-# 22
+# 22 从上到下打印树
 vector<int> PrintFromTopToBottom(TreeNode* root) {
 
 	if(!root) return {}; 
@@ -400,7 +401,7 @@ vector<int> PrintFromTopToBottom(TreeNode* root) {
 	return res;
     }
 
-# 23
+# 23 二叉搜索树的后序遍历
 bool helper(vector<int> sequence,int start,int end){
 
 	if(start>=end) return true;
@@ -415,7 +416,7 @@ bool VerifySquenceOfBST(vector<int> sequence) {
 	return helper(sequence,0,sequence.size()-1);
 }
 
-# 24
+# 24 二叉树和为某值的径
 void search(TreeNode* root,vector<vector<int>>& res,vector<int>& ans,int expectNumber,int tmp){
 
 	ans.push_back(root->val);tmp+=root->val;
@@ -435,17 +436,17 @@ vector<vector<int> > FindPath(TreeNode* root,int expectNumber) {
 	return res;
     }
 
-# 25
+# 25 复杂链表赋值
 RandomListNode* Clone(RandomListNode* pHead){
         
     }
 
-# 26
+# 26 二叉搜索树与双向链表
 TreeNode* Convert(TreeNode* pRootOfTree){
         
     }
 
-# 27
+# 27 字符串排列
 void helper(string str,vector<string>&res,int pos){
 	if(pos==str.size()-1) res.push_back(str);
 	else{
@@ -470,7 +471,7 @@ vector<string> Permutation(string str) {
         return res;
     } 
 
-# 28
+# 28 数组中出现次数超过一半的数
 int MoreThanHalfNum_Solution(vector<int> numbers) {
    
 	map<int,int>m;
@@ -483,7 +484,8 @@ int MoreThanHalfNum_Solution(vector<int> numbers) {
 	}
 	return 0;
     } 
-# 29
+
+# 29 最小k个数
 void helper(vector<int>& input,int l,int r,int k){
 
     int pivot = input[r];
@@ -524,7 +526,7 @@ vector<int> GetLeastNumbers_Solution(vector<int> input, int k) {
     return vector<int>(input.begin(),input.begin()+k);
 }
 
-# 30
+# 30 最大连续子序列和
 int FindGreatestSumOfSubArray(vector<int> array) {
     
     int amount = 0;
@@ -541,7 +543,7 @@ int NumberOf1Between1AndN_Solution(int n){
     
     }
 
-# 32
+# 32 打印最小字符串
 static bool cmp(const string& st1, const string& st2){
 
     return st1+st2<st2+st1;
@@ -560,7 +562,7 @@ string PrintMinNumber(vector<int> numbers) {
     return ans;
 }
 
-# 33
+# 33 丑数
 int GetUglyNumber_Solution(int index) {
     
     if(index < 7) return index;
@@ -939,7 +941,7 @@ bool match(char* str, char* pattern){
         }
     }   
 
-# 53
+# 53 判断数字
 bool isNumeric(char* str){
 
 // 标记符号、小数点、e是否出现过
@@ -1251,16 +1253,21 @@ vector<int> maxInWindows(const vector<int>& num, unsigned int size){
     }
 
 # 65 矩阵路径查找 有点问题
-bool helper(char* matrix,vector<vector<bool>>M,char* str, int rows, int cols,int x,int y){
-    if(*str=='\0') return true;
-    if(x<0||x>=rows) return false;
-    if(y<0||y>=cols) return false;
-    if(matrix[x*cols+y]!=*str||M[x][y]==false) return false;
-    M[x][y]==false;
-    bool flag = helper(matrix,M,str+1,rows,cols,x+1,y)||helper(matrix,M,str+1,rows,cols,x-1,y)||
-                helper(matrix,M,str+1,rows,cols,x,y+1)||helper(matrix,M,str+1,rows,cols,x,y-1);
-    M[x][y]==true;
-    return flag;
+bool helper(char* matrix,vector<vector<bool>>&M,char* str, int rows, int cols,int x,int y){
+
+	if(*str=='\0') return true;
+
+	bool hasPath = false;
+	if(x>=0&&x<rows&&y>=0&&y<cols&&M[x][y]&&*str==matrix[x*cols+y]){
+
+		M[x][y] = false;
+		hasPath = helper(matrix,M,str+1,rows,cols,x+1,y)
+		||helper(matrix,M,str+1,rows,cols,x-1,y)
+		||helper(matrix,M,str+1,rows,cols,x,y+1)
+		||helper(matrix,M,str+1,rows,cols,x,y-1);
+		if(!hasPath) M[x][y] = true;
+	}
+	return hasPath;
 }
 bool hasPath(char* matrix, int rows, int cols, char* str){
     vector<vector<bool>> M(rows,vector<bool>(cols,true));
@@ -1271,6 +1278,36 @@ bool hasPath(char* matrix, int rows, int cols, char* str){
         }
     }
     return false;
+}
+
+# 66 机器人运动范围
+bool check(int x,int y,int threshold){
+	int s = 0;
+	while(x){
+		s += x%10;
+		x /= 10;
+	}
+	while(y){
+		s += y%10;
+		y /= 10;
+	}
+	return s<=threshold;
+}
+int movingCountcore(vector<vector<bool>>& matrix,int rows,int cols,int x,int y,int threshold){
+
+	int count = 0;
+	if(x>=0&&x<rows&&y>=0&&y<cols&&matrix[x][y]&&check(x,y,threshold)){
+		matrix[x][y] = false;
+		count = 1 + movingCountcore(matrix,rows,cols,x-1,y,threshold)+movingCountcore(matrix,rows,cols,x+1,y,threshold)
+			+movingCountcore(matrix,rows,cols,x,y-1,threshold)+movingCountcore(matrix,rows,cols,x,y+1,threshold);
+	}
+	return count;
+}
+int movingCount(int threshold, int rows, int cols){
+        
+        vector<vector<bool>> matrix(rows,vector<bool>(cols,true));
+
+        return movingCountcore(matrix,rows,cols,0,0,threshold);
 }
 
 # 快速排序
