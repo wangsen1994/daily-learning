@@ -922,4 +922,535 @@ vector<int> multiply(const vector<int>& A) {
 # 52 正则表达式匹配
 bool match(char* str, char* pattern){
     
+    if(*str=='\0' && *pattern=='\0') return true;
+    if(*str!='\0' && *pattern=='\0') return false;
+
+    if (*(pattern+1) != '*'){
+            if (*str == *pattern || (*str != '\0' && *pattern == '.')) // 注意 *str != '\0'
+                return match(str+1, pattern+1);
+            else
+                return false;
+        }
+    else{
+            if (*str == *pattern || (*str != '\0' && *pattern == '.'))
+                return match(str, pattern+2) || match(str+1, pattern);
+            else
+                return match(str, pattern+2);
+        }
+    }   
+
+# 53
+bool isNumeric(char* str){
+
+// 标记符号、小数点、e是否出现过
+    bool sign = false, decimal = false, hasE = false;
+    for (int i = 0; i < strlen(str); i++) {
+        if (str[i] == 'e' || str[i] == 'E') {
+            if (i == strlen(str)-1) return false; // e后面一定要接数字
+            if (hasE) return false;  // 不能同时存在两个e
+            hasE = true;
+        } else if (str[i] == '+' || str[i] == '-') {
+        // 第二次出现+-符号，则必须紧接在e之后
+            if (sign && str[i-1] != 'e' && str[i-1] != 'E') return false;
+            // 第一次出现+-符号，且不是在字符串开头，则也必须紧接在e之后
+            if (!sign && i > 0 && str[i-1] != 'e' && str[i-1] != 'E') return false;
+            sign = true;
+        } else if (str[i] == '.') {
+            // e后面不能接小数点，小数点不能出现两次
+            if (hasE || decimal) return false;
+                decimal = true;
+        } else if (str[i] < '0' || str[i] > '9') // 不合法字符
+            return false;
+        }
+        return true;
     }
+
+# 54 字符流中第一个不重复的字符
+class Solution
+{
+public:
+  //Insert one char from stringstream
+    void Insert(char ch)
+    {
+         if(M.find(ch)==M.end()){
+            M[ch] = 1;
+            Q.push(ch);
+         } else {
+            M[ch]++;
+            while(M[Q.front()]>1) Q.pop();
+         }
+    }
+  //return the first appearence once char in current stringstream
+    char FirstAppearingOnce()
+    {
+        if(Q.empty()) return '#';
+        else return Q.front();
+    }
+    queue<char> Q;
+    map<char,int> M;
+
+};
+
+# 55 链表中环的入口结点
+ListNode* EntryNodeOfLoop(ListNode* pHead){
+
+    if(pHead==NULL||pHead->next==NULL||pHead->next->next==NULL) return NULL;
+    ListNode* fast = pHead->next->next;
+    ListNode* slow = pHead->next;
+
+    while(fast!=slow){
+        if(fast->next!=NULL&&fast->next->next!=NULL){
+            fast = fast->next->next;
+            slow = slow->next;
+        }else return NULL;
+    }
+
+    fast = pHead;
+    while(fast!=slow){
+        fast = fast->next;
+        slow = slow->next;
+    }
+    return slow;
+    }
+
+# 56 删除链表中重复的节点
+ListNode* deleteDuplication(ListNode* pHead){
+
+    if (pHead==NULL || pHead->next==NULL) return pHead;
+    ListNode* Head = new ListNode(0);
+    Head->next = pHead;
+    ListNode* pre  = Head;
+    ListNode* last = Head->next;
+    while (last!=NULL){
+        if(last->next!=NULL && last->val == last->next->val){
+            // 找到最后的一个相同节点
+            while (last->next!=NULL && last->val == last->next->val){
+                last = last->next;
+            }
+            pre->next = last->next;
+            last = last->next;
+        }else{
+            pre = pre->next;
+            last = last->next;
+        }
+    }
+    return Head->next;
+}
+
+# 57 中序遍历下一个节点
+TreeLinkNode* GetNext(TreeLinkNode* pNode){
+        
+        if (pNode == NULL)return NULL;
+        TreeLinkNode* node = pNode;
+        if(pNode->right){
+
+            TreeLinkNode* cur = pNode->right;
+            while(cur->left) cur = cur->left;
+            return cur;
+        }
+        while (pNode->next != NULL)  // 注意作为右孩子的情况，左孩子则直接返回父节点
+        {
+            TreeLinkNode *proot = pNode->next;
+            if (proot->left == pNode)
+                return proot;
+            pNode = pNode->next;
+        }
+        return NULL;
+    }
+
+# 58 判断对称二叉树
+bool helper(TreeNode* lNode,TreeNode* rNode){
+    if(lNode==NULL) return rNode==NULL;
+    if(rNode==NULL) return false;
+    if(lNode->val!=rNode->val) return false;
+    return helper(lNode->left,rNode->right)&&helper(lNode->right,rNode->left);
+}
+bool isSymmetrical(TreeNode* pRoot){
+    
+    if(pRoot==NULL)return true;
+    return helper(pRoot->left,pRoot->right);
+}
+
+# 59 Z型打印树
+vector<vector<int> > Print(TreeNode* pRoot) {
+        
+        if(pRoot==NULL) return {};
+        stack<TreeNode*> S1;
+        stack<TreeNode*> S2;
+        vector<vector<int>> res;
+        S1.push(pRoot);
+        while(S1.size()||S2.size()){
+            vector<int> ans;
+            int size = S1.size();
+            for(int i = 0;i<size;i++){
+                TreeNode* node = S1.top();
+                ans.push_back(node->val);
+                if(node->left) S2.push(node->left);
+                if(node->right) S2.push(node->right);
+                S1.pop();
+            }
+            if(ans.size()) res.push_back(ans);
+            ans.clear();
+            size = S2.size();
+            for(int i = 0;i<size;i++){
+                TreeNode* node = S2.top();
+                ans.push_back(node->val);
+                if(node->right) S1.push(node->right);
+                if(node->left) S1.push(node->left);
+                S2.pop();
+            }
+            if(ans.size()) res.push_back(ans);
+            ans.clear();
+        }
+        return res;
+    }
+
+# 60 从左至右按层打印树
+vector<vector<int> > Print(TreeNode* pRoot) {
+    if(pRoot==NULL) return {};
+    queue<TreeNode*> Q;
+    vector<vector<int>> res;
+    Q.push(pRoot);
+    while(Q.size()){
+        vector<int> ans;
+        int size = Q.size();
+        for(int i = 0;i<size;i++){
+            TreeNode* node = Q.top();
+            ans.push_back(node->val);
+            if(node->left) Q.push(node->left);
+            if(node->right) Q.push(node->right);
+            Q.pop();
+        }
+        res.push_back(ans);
+    }
+    return res;
+}
+
+# 61 序列化二叉树和反序列化二叉树
+class Solution {  
+public:
+    char* Serialize(TreeNode *root) {
+       if(root == NULL)
+           return NULL;
+        string str;
+        Serialize(root, str);
+        char *ret = new char[str.length() + 1];
+        int i;
+        for(i = 0; i < str.length(); i++){
+            ret[i] = str[i];
+        }
+        ret[i] = '\0';
+        return ret;
+    }
+    void Serialize(TreeNode *root, string& str){
+        if(root == NULL){
+            str += '#';
+            return ;
+        }
+        string r = to_string(root->val);
+        str += r;
+        str += ',';
+        Serialize(root->left, str);
+        Serialize(root->right, str);
+    }
+     
+    TreeNode* Deserialize(char *str) {
+        if(str == NULL)
+            return NULL;
+        TreeNode *ret = Deserialize(&str);
+ 
+        return ret;
+    }
+    TreeNode* Deserialize(char **str){//由于递归时，会不断的向后读取字符串
+        if(**str == '#'){  //所以一定要用**str,
+            ++(*str);         //以保证得到递归后指针str指向未被读取的字符
+            return NULL;
+        }
+        int num = 0;
+        while(**str != '\0' && **str != ','){
+            num = num*10 + ((**str) - '0');
+            ++(*str);
+        }
+        TreeNode *root = new TreeNode(num);
+        if(**str == '\0')
+            return root;
+        else
+            (*str)++;
+        root->left = Deserialize(str);
+        root->right = Deserialize(str);
+        return root;
+    }
+};
+
+# 62 二叉树第k个节点
+class Solution {
+    int count = 0;
+public:
+    TreeNode* KthNode(TreeNode* pRoot,  int k)
+    {
+        if(pRoot){ 
+                TreeNode *ret = KthNode(pRoot->left, k);
+                if(ret) return ret;
+                if(++count == k) return pRoot;
+                ret = KthNode(pRoot->right,k);
+                if(ret) return ret;
+        }
+        return nullptr;
+    }
+};
+
+# 63 数据流中位数
+class Solution {
+public:
+    void Insert(int num)
+    {
+        count++;
+        // 元素个数是偶数时,将小顶堆堆顶放入大顶堆
+        if(count%2==0){
+            Q1.push(num);
+            Q2.push(Q1.top());
+            Q1.pop();
+        }
+        else{
+            Q2.push(num);
+            Q1.push(Q2.top());
+            Q2.pop();
+        }
+    }
+
+    double GetMedian()
+    { 
+
+        if(count&0x1){
+            return Q1.top();
+        }
+        else{
+            return double((Q1.top()+Q2.top())/2.0);
+        }
+    }
+private:
+    int count = 0;
+    priority_queue<int,vector<int>,less<int>> Q1;
+    priority_queue<int,vector<int>,greater<int>> Q2;
+};
+
+# 64 滑动窗口值
+vector<int> maxInWindows(const vector<int>& num, unsigned int size){
+        deque<int> q;
+        vector<int> res;
+        for(int i = 0;i<num.size();i++){
+
+            while(q.size()&&num[q.back()]<=num[i])
+                q.pop_back();
+            while(q.size()&&i-q.front()+1>size)
+                q.pop_front();
+            q.push_back(i);
+            if(size&&i+1>=size) res.push_back(num[q.front()]);
+        }
+        return res;
+    }
+
+# 65 矩阵路径查找 有点问题
+bool helper(char* matrix,vector<vector<bool>>M,char* str, int rows, int cols,int x,int y){
+    if(*str=='\0') return true;
+    if(x<0||x>=rows) return false;
+    if(y<0||y>=cols) return false;
+    if(matrix[x*cols+y]!=*str||M[x][y]==false) return false;
+    M[x][y]==false;
+    bool flag = helper(matrix,M,str+1,rows,cols,x+1,y)||helper(matrix,M,str+1,rows,cols,x-1,y)||
+                helper(matrix,M,str+1,rows,cols,x,y+1)||helper(matrix,M,str+1,rows,cols,x,y-1);
+    M[x][y]==true;
+    return flag;
+}
+bool hasPath(char* matrix, int rows, int cols, char* str){
+    vector<vector<bool>> M(rows,vector<bool>(cols,true));
+    for(int i = 0;i<rows;i++){
+        for(int j=0;j<cols;j++){
+            if(helper(matrix,M,str,rows,cols,i,j))
+                return true;
+        }
+    }
+    return false;
+}
+
+# 快速排序
+void sorthelper(vector<int>& data,int l,int r){
+    if(l>=r) return ;
+    int i = l, j = r,pivot = data[r];
+    while(l<r){
+
+        while(l<r&&data[i]<=pivot)i++;
+        data[j] = data[i];
+        while(l<r&&data[j]>=pivot)j--;
+        data[i] = data[j];
+    }
+    data[i] = pivot;
+    sorthelper(data,l,i-1);
+    sorthelper(data,j+1,r);
+}
+void quicksort(vector<int> data,int n){
+    if(n<=0) return ;
+    quicksort(data,0,n-1);
+}
+
+# 插入排序
+void insertsort(vector<int> data,int n){
+
+    for(int i=1,j;i<n-1;i++){
+        for(j=i-1;j>=0&&data[i]<data[j];j--)
+            data[j+1] = data[j];
+        data[j] = data[i];
+    }
+}
+
+# 冒泡排序
+void bubblesort(vector<int> data,int n){
+
+    bool flag = true;
+    for(int i = 0;i<n-1&&flag;i++){
+        for(int j = n-1,flag = false;j>i;j--){
+            if(data[j]<data[j-1])
+            {
+                swap(data[j],data[j-1]);
+                flag = true;
+            }
+        }
+    }
+}
+
+# 选择排序
+void selectsort(vector<int> data,int n){
+
+    for(int i = 0;i<n-1;i++){
+        int pos = i;
+        for(int j = i+1;j<n;j++){
+            if(data[j]<data[i]) pos = j;
+        }
+        swap(data[pos],data[i]);
+    }
+}
+
+# 堆排序
+void moveDown(vector<int>data,int first,int last){
+
+    int largest = first*2+1;
+    while(largest<=last){
+        if(largest<last&&data[largest]<largest[largest+1])
+            largest = largest + 1;
+        if(data[first]<data[largest]){
+            swap(data[first],data[largest]);
+            first = largest;
+            largest = first*2 + 1;
+        }else largest = last + 1;
+    }
+}
+
+void heapsort(vector<int> data,int n){
+
+    for(int i = n/2-1;i>=0;i--){
+        moveDown(data,i,n-1);
+    }
+    for(int i = n-1;i>0;i--){
+        swap(data[0],data[i]);
+        moveDown(data,0,i);
+    }
+}
+
+# 归并排序
+void merge(vector<int>data,int l,int mid,int r){
+    int len = r - l + 1;
+    vector<int> tmp(len);
+    int i = l, j = mid+1;
+    int pos = 0
+    while(i<=mid&&j<=r){
+        if(data[i]<data[j]) tmp[pos++] = data[i++];
+        else tmp[pos++] = data[j++];
+    }
+    while(i<=mid) tmp[pos++] = data[i++];
+    while(j<=r) tmp[pos++] = data[j++];
+
+    for(int i = 0;i<len;i++){
+        data[l+i] = tmp[i];
+    }
+}
+
+void mergesort(vector<int> data,int l, int r){
+
+    if(l>=r) return;
+    int mid = l + (r-l)/2;
+    mergesort(data,l,mid);
+    mergesort(data,mid+1,r);
+    merge(data,l,mid,r);
+}
+
+# LRU
+class LRUcache{
+public:
+    LRUcache(int cap_):capacity(cap_){}
+
+    int get(int key){
+        auto it = m.find(key);
+        if(it==m.end()) return -1;
+        l.splice(l.begin(),l,it->second);
+
+        return it->second->second;
+    }
+
+    void put(int key,int val){
+        auto it = m.find(key);
+        if(it!=m.end())l.erase(it->second);
+        l.push_front(make_pair(key,val));
+        m[key] = l.begin();
+
+        if(m.size()>capacity){
+            int k = l.rbegin()->first;
+            l.pop_back();
+            m.erase(k);
+        }
+    }
+
+private:
+    int capacity;
+    list<pair<int,int>> l;
+    unordered_map<int, list<pair<int,int>>::iterator>m;
+}
+
+# KMP
+void makeNext(const string P,vector<int>& next)
+{
+    int q,k;
+    int m = P.size();
+    next[0] = 0;
+    for (q = 1,k = 0; q < m; ++q)
+    {
+        while(k > 0 && P[q] != P[k])
+            k = next[k-1];
+        if (P[q] == P[k])
+        {
+            k++;
+        }
+        next[q] = k;
+    }
+}
+
+int KMP(const string T,const string P)
+{
+    int n = T.size(),m = P.size();
+    int i,q;
+    vector<int> next;
+    makeNext(P,next);
+    for (i = 0,q = 0; i < n; ++i)
+    {
+        while(q > 0 && P[q] != T[i])
+            q = next[q-1];
+        if (P[q] == T[i])
+        {
+            q++;
+        }
+        if (q == m)
+        {
+            printf("Pattern occurs with shift:%d\n",(i-m+1));
+        }
+    }    
+}
+
